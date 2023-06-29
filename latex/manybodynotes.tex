@@ -7,6 +7,7 @@
 \lhead{Ben McDonough}
 
 \usepackage{amsmath}
+\usepackage{tcolorbox}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{dsfont}
@@ -15,6 +16,7 @@
 \usepackage{soul}
 \usepackage{hyperref}
 \usepackage{simpler-wick}
+\usepackage{xcolor}
 
 \newcommand{\kb}{k_{\text{B}}}
 \newcommand{\Ham}{\hat{\mathcal{H}}}
@@ -29,7 +31,7 @@
 \setulcolor{red}
 
 \begin{document}
-\section{Review of single particle quantum mechanics and statistical mechanics of a quantum system}
+\section{Review: stat mech and single-particle qmech}
 
 \subsection{Wave Function}
 Max Born interpretation: probability density of finding a particle at a point $\vec r$ is
@@ -335,8 +337,136 @@ $$
 $\{P\}$: all permutations of \hl{different} indices. The number of indices $P_1, \hdots, P_N$ is $\leq N$. Free-boson system: $E = \sum_{i=1}^\infty n_i \varepsilon_i; \ N = \sum_{i=1}^\infty n_i$ ($n_i$ may take values $0,1,\hdots$.)\\ \\
 \textcolor{magenta}{More: Landau and Lifschitz v. 3, \textsection (you may like also \textsection 62, 63) + Negele-Orland, Sec. 1.2 and 1.3}
 \section{Second Quantization}
-1.26
 \subsection{Boson Statistics}
+Let $\psi_1(r), \psi_2(r),...$ be a compete orthonormal set of single-particle states (e.g. eigenfunctions of a single-particle Hamiltonian $h(p,r))$.
+\par Introduce occupation number $n_1, n_2, ...$ for states $1, 2, ...$. We want to construct a formalism operating with $\{n_i\}$ instead of $\{r, \sigma\}_i$. 
+\par Use Dirac notations:
+\begin{equation}
+\ket{n_1, n_2, ...} \equiv \sqrt{\frac{\prod_k n_k!}{N!}} \sum_{P'}\psi_{P'_1}(r_1)...\psi_{P'_N}(r_N)
+\label{eq:symmetricstate}
+\end{equation}
+\textit{(representation by occupation numbers: \colorbox{yellow}{Fock space})}\\
+\noindent Our goal is to evaluate matrix elements of operators of observables in the basis $\ket{n_2, n_2,...}$. We start with single-coordinate (single-body) observables:
+$$
+\hat F^{(1)} = \sum_a \hat f_a^{(1)} = \sum_a f^{(1)}(\hat r_a, \hat p_a) \smallspace \text{$a$: particle number $a$}
+$$
+$$
+\text{\textbf{Example:} density operator } \hat n(R) = \sum_a \hat n^{(a)}(R) = \sum_a \delta(R - \hat r_a) \smallspace \hat n^{(a)}(R) = \delta(R - \hat r_a)
+$$
+We are interested in relating matrix element $\bra{n_1,...}F^{(1)}\ket{n'_1,...}$ to the matrix elements $\bra{i}f^{(a)}\ket{k}$
+$$
+\bra{i}f^{(a)}\ket{k} = \int dr_a \psi^\ast _i(r_a) f^{(a)}(\hat r_a, \hat p_a) \psi_k(r_a)
+$$
+$$
+\text{\textbf{Example:} }  n^{(a)}(R) = \delta(R-r_a) \ \Rightarrow \ \bra{i} n^{(a)}(R)\ket{k} = \int dr_a \psi_i^\ast(r_a) \delta(R-r_a)\psi_k(r_a)= \psi_i^\ast(R)\psi_k(R)
+$$
+\par Only \underline{one} single-partticle wave function, each from $\bra{...}$ and $\ket{...}$ is involved non-trivially in the integration, once one uses eq. \ref{eq:symmetricstate} to evaluate $\bra{...}F\ket{...}$. This is why at most one particle ``moves" from one state ($k$) to another ($i$).
+\par The only non-zero matrix elements:
+$$
+n'_k = n_k-1, \ n_i + 1, \ n'_l = n_l  \ \text{for} \ l\neq i,k \ \text{or} \ n_l' = n_l \ \forall l
+$$
+Consider first the matrix elements with two of the occupations numbers changing:
+$$
+\bra{n_1, ..., n_i, ..., n_k-1, ...}\hat F^{(1)} \ket{n_1, ..., n_i-1, ..., n_k,...} = \sqrt{n_i n_k}f_{ik}
+$$
+$$
+\text{where} \ \bra{i}f^{(a)}\ket{k} = \int fr_a \psi_i^\ast(r_a)f^{(a)}(\hat r_a, \hat p_a) \psi_k(r_a)
+$$
+\par An \textbf{example} of $\hat n(R)$ to see the origin of $\sqrt{n_in_k}$ factor:
+$$
+\hat n(R) = \sum_a\hat n^{(a)}(R) \smallspace \hat n^{(a)}(R) = \delta(R - r_a); \smallspace f_{ik} = \psi^\ast_i(R)\psi_k(R) \ .
+$$
+\begin{align*}
+    \bra{n_1, ..., n_i, ..., n_k=1, ...}&\hat n(R) \ket{n_1, ..., n_i-1, ...,n_k,...}\\
+                                        &= \frac{1}{N!}\prod_{l \neq i, k} n_l! \times \underbrace{N}_{\textcolor{purple}{\text{from }\sum_a...}}\times \overbrace{\sqrt{n_i!(n_k-1)!}\sqrt{(n_i-1)!n_k!}}^{(1)}\psi^\ast_i(R)\psi_k(R) \overbrace{\underbrace{\sum_{\{P'\}_\text{bra}}\sum_{\{P''\}_\text{ket}}}_{\text{over }N-1\text{ parity}}}^{\textcolor{blue}{\frac{(N-1)!}{\prod_{l\neq i,k}n_l!(n_k-1)!(n_i-1)!}}}\delta_{\text{bra},\text{ket}}\\
+    (1): \smallspace & \sqrt{n_i!(n_k-1)!}\sqrt{(n_i-1)!n_k!} = \sqrt{n_in_k}(n_k-1)!(n_i-1)!\\
+\end{align*}
+\begin{align*}
+                    \frac{1}{N!} \times \prod_{l\neq i,k}n_k! \times N \times \sqrt{n_i!(n_k-1)!}\sqrt{(n_i-1)!n_k!} &= \prod_{l\neq i,k} n_l! \times \frac{(n_k-1)!(n_i-1)!}{(N-1)!} \times \sqrt{n_in_k}\\
+                    \prod_{l\neq i,k} n_l! \frac{(n_k-1)!(n_i-1)!}{(N-1)!} \underbrace{\sum_{\{P'\}_\text{bra}}\sum_{\{P''\}_\text{ket}}}_{\text{over }N-1\text{ parity}}\delta_{\text{bra},\text{ket}} &= \prod_{l\neq i,k}n_l! \times \frac{(n_k-1)!(n_i-1)!}{(N-1)!}\times \frac{(N-1)!}{\prod_{l\neq i,k}n_l!(n_k-1)!(n_i-1)!} = 1
+\end{align*}
+Thus,
+$$
+\ket{n_1,\dots,n_i,\dots,n_k-1,\dots}\hat n(R) \ket{n_1,\dots,n_i-1,\dots,n_k\dots} = \sqrt{n_in_k} \psi_i^\ast(R)\psi_k(R)
+$$
+\begin{tcolorbox}[colback=white,colframe=red]
+    \begin{align*}
+    \bra{n_1,\dots,n_i,\dots,n_k-1,\dots}\hat F^{(1)} \ket{n_1,\dots,n_i-1,\dots, n_k,\dots} &= \sqrt{n_i, n_k}f_{ik}^{(1)} \\
+    \bra{n_1, \dots, n_i \dots, n_k, \dots}\hat F^{(1)} \ket{n_1,\dots,n_i,\dots,n_k,\dots} &= \sum_{i=1}^\infty n_i f_{ii}^{(1)} \\
+    f_{ik}^{(1)} = \int dr \psi_i^\ast(r) \hat f^{(1)}\psi_k(r) &\cong \bra{i}f^{(1)}\ket{k}
+    \end{align*}
+\end{tcolorbox}
+
+\noindent \textcolor{purple}{Reading:}\\
+\noindent \textit{Eq. (64.2) in LL v.3} \smallspace \textit{details:} Fetter \& Walecka, Ch .1\\ \\
+\noindent Introduce annihilation operator $\hat a_i$ acting on $\ket{n_1, n_2,\dots,n_i, \dots}$:
+$$
+\hat a_i\ket{n_1, n_2, \dots,n_i,\dots} = \sqrt{n_1}\ket{n_1, n_2, \dots, n_i-1,\dots}
+$$
+The \textcolor{red}{only} non-zero matrix element of $\hat a_i$ is
+$$
+\bra{n_1, \dots, n_i-1,\dots}\hat a_i \ket{n_1, \dots, n_i, \dots} = \sqrt{n_i}
+$$
+abbreviate to
+\[
+\begin{cases}
+    \bra{n_1-1}\hat a_i \ket{n_i} = \sqrt{n_i} \\
+    \bra{n_i}\hat a_i^\dagger \ket{n_i-1} = \bra{n_i-1}\hat a_i\ket{n_1}^\ast = \sqrt{n_i}
+\end{cases}
+\]
+$a_i^\dagger$: creation operator (of a particle in state $i$)
+$$
+a_i^\dagger \ket{n_1, n_2, \dots, n_i, \dots} = \sqrt{n_i+1}\ket{n_1, n_2, \dots, n_i+1, \dots}
+$$
+Consider
+$$
+a_i^\dagger a_i \ket{n_1, \dots, n_i, \dots} = a_i^\dagger \sqrt{n_i} \ket{n_1, \dots, n_i-1,\dots} = n_i \ket{n_1,\dots,n_i,\dots}
+$$
+($\hat a_i^\dagger \hat a_i$: operator of particle \# in state $i$):
+\begin{align*}
+    \hat a_i\hat a_i^\dagger\ket{n_1, \dots, n_i, \dots} &= (n_i+1) \ket{n_1, \dots, n_i, \dots} \\
+    \hat a_i \hat a_i^\dagger - \hat a_i^\dagger \hat a_i &= 1 \smallspace \text{(regardless $n_i$)}
+\end{align*}
+Generalizing for $i\neq k$:
+\begin{align*}
+    \hat a_i \hat a_k^\dagger - \hat a_k^\dagger a_i &= 0  & &(i\neq k)\\
+    \hat a_i \hat a_k - \hat a_k \hat a_i & =0 & &(\text{any } i, k)
+\end{align*}
+\begin{center}
+    \tcbox[nobeforeafter, colframe = red, colback = white]{\([\hat a_i, \hat a_k^\dagger] = \delta_{ik}, \smallspace [\hat a_i, \hat a_k] = 0 \smallspace (\forall \ i,k)\)}
+\end{center}
+Generalization on a ``2-particle" operator, such as pair interaction potential $(\hat f^{(2)}_{ab} = V(r_a-r_b))$
+$$
+\hat F^{(2)} = \sum_{a>b}\hat f_{ab}^{(2)} = \frac{1}{2}\sum_{a,b} \hat f_{ab}^{(2)} - \frac{1}{2}\sum_a \hat f_{aa}^{(2)}
+$$
+\begin{tcolorbox}[colframe = red, colback = white]
+    \begin{align*}
+        \hat F^{(2)}&= \frac{1}{2}\sum_{i,k,l,m} \bra{ik}\hat f^{(2)} \ket{lm} a_i^\dagger a_k^\dagger a_m a_l \\
+        \bra{ik}\hat f^{(2)} \ket{lm} &= \int dr_1 \int dr_2 \psi^\ast(r_1)\psi^\ast(r_2) \hat f^{(2)}(\hat r_1, \hat p_1; \hat r_2, \hat p_2) \psi_l(r_1)\psi_m(r_2)
+    \end{align*}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colframe = red, colback = white]
+    $$
+        \hat {\mathcal H} = \sum_a \hat {\mathcal H}_a^{(1)} + \sum_{a > b} V(\vec r_a, \vec r_b), \smallspace \text{with} \ \hat{\mathcal{H}}_a^{(1)} = -\frac{\hbar^2}{2m}\nabla^2 + U(\vec r_a)
+    $$
+    In second quantization:
+    $$
+    \hat{\mathcal{H}} = \sum_{ik}\bra{i}\hat{\mathcal{H}}^{(1)}\ket{k}a_i^\dagger a_k + \frac{1}{2} \sum_{i,k,l,m}\bra{ik}\hat V \ket{lm} a_i^\dagger a_k^\dagger a_m a_l
+    $$
+\end{tcolorbox}
+$$
+\hat N = \sum_i a_i^\dagger a_i; \ \ [\hat N, \hat{\mathcal{H}}] = 0 \ \text{(particle \# conservation)}
+$$
+The wave function $\ket{n_1, n_2,\dots}$ can be represented by action of creation operators on vacuum $\ket{0}$:
+$$
+\ket{n_1, n_2, \dots} = \frac{1}{\sqrt{n_1!n_2!\dots}}(a_1^\dagger)^{n_1}(a_2^\dagger)^{n_2}\dots \ket{0}
+$$
+(recall that $a_i^\dagger \ket{n_1, \dots , n_i,\dots} = \sqrt{n_i +1}\ket{n_1,\dots,n_i+1,\dots}$, 
+$$
+(a_i^\dagger)^{n_1} \ket{0} = (a_i^\dagger)^{n_i-1})a_i^\dagger \ket{0} = (a_i^\dagger)^{n_i-1}\sqrt{1}\ket{1} = (a_i^\dagger)^{n_i-1}\sqrt{2}\times \sqrt{1}\ket{2} = \dots - \sqrt{n_i!} \ket{n_1})
+$$
+In real space: $\Psi = \psi_0(r_1)\psi_0(r_2)\dots \psi_0(r_N)$
 \subsection{Fermions}
 \subsection{Field Operators}
 \subsection{Change of the one-particle basis in second quantization}
@@ -349,13 +479,13 @@ $\{P\}$: all permutations of \hl{different} indices. The number of indices $P_1,
 \subsection{Elementary theory of photoelectric effect and the fermion spectral function}
 2.21\\
 \begin{defn}[Spectral Function]
-We consider an incident photon of momentum $\vec q$. The spectral function for a hole is defined
-$$
-A_h(\vec p, \omega) = \frac{1}{\pi}\Re \int_{-\infty}^0 dt e^{i\omega t + 0.t} \int d\vec r e^{-i\vec p \cdot \vec r} \bra{G} \psi^\dagger(0,0)\psi(\vec r, t)\ket{G}
-$$
-In terms of the probability amplitude for a hole to propagate from a point $\vec r$ at time $t$ to $0$ at time $0$ $\bra G \psi^\dagger(0,0) \psi(\vec r, t)\ket{G}$. Then the frequency of transition from an incident photon of momentum $\vec q$ to a scattered electron of momentum $\ket k$ is
-$$
-\omega_{\vec q, \vec k} = \frac{2\pi}{\hbar^2}|\lambda|^2 \int d\omega\delta(\omega + (\omega_{\vec q}-\frac{\hbar^2k^2}{2m}))\int d\vec p \delta(\vec p +\omega_{\vec q}-\vec k)) A_h(\vec p, \omega))
+    We consider an incident photon of momentum $\vec q$. The spectral function for a hole is defined
+    $$
+    A_h(\vec p, \omega) = \frac{1}{\pi}\Re \int_{-\infty}^0 dt e^{i\omega t + 0.t} \int d\vec r e^{-i\vec p \cdot \vec r} \bra{G} \psi^\dagger(0,0)\psi(\vec r, t)\ket{G}
+    $$
+    In terms of the probability amplitude for a hole to propagate from a point $\vec r$ at time $t$ to $0$ at time $0$ $\bra G \psi^\dagger(0,0) \psi(\vec r, t)\ket{G}$. Then the frequency of transition from an incident photon of momentum $\vec q$ to a scattered electron of momentum $\ket k$ is
+    $$
+    \omega_{\vec q, \vec k} = \frac{2\pi}{\hbar^2}|\lambda|^2 \int d\omega\delta(\omega + (\omega_{\vec q}-\frac{\hbar^2k^2}{2m}))\int d\vec p \delta(\vec p +\omega_{\vec q}-\vec k)) A_h(\vec p, \omega))
 $$
 \end{defn}
 The spectral function for noninteracting fermions is
@@ -531,4 +661,8 @@ $$
 \section{Green functions at $T=0$}
 \section{Perturbations Theory for Green functions}
 
+\section{Sources}
+Huang Stat Mech
+LL
+Fetter and Walecka
 \end{document}
