@@ -21,6 +21,15 @@
 \newcommand{\kb}{k_{\text{B}}}
 \newcommand{\Ham}{\hat{\mathcal{H}}}
 \newcommand{\vecop}[1]{\hat{\vec{#1}}}
+\newcommand{\hamiltonian}{\hat{\mathcal{H}}}
+
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+
+\newcommand{\onebody}[1]{{#1}^{(1)}}
+\newcommand{\twobody}[1]{{#1}^{(2)}}
 
 \newtheorem*{defn}{Definition}
 \newcommand{\Lec}[1]{Lecture: #1 \\ \\ \noindent}
@@ -151,7 +160,7 @@ $$
 $$
 In general, depends on the initial state (\hl{via $\alpha_n$}). ETH states that for a \hl{large} (infinite in the limit) system and a \hl{local quantity $\hat O$}, $|\alpha_n|^2$ depend only on the state's energy $E_n$. \\ \\
 
-\textcolor{magenta}{\ul{Expectation value} of $\hat O$ for a \ul{mixed state} described by a density matrix}\\ \\
+\textcolor{purple}{\ul{Expectation value} of $\hat O$ for a \ul{mixed state} described by a density matrix}\\ \\
 
 Return for a minute to the definition of expectation values for a one-particle system and write it out using the real-space coordinate representation:
 $$
@@ -441,7 +450,7 @@ $$
 $$
 \begin{tcolorbox}[colframe = red, colback = white]
     \begin{align*}
-        \hat F^{(2)}&= \frac{1}{2}\sum_{i,k,l,m} \bra{ik}\hat f^{(2)} \ket{lm} a_i^\dagger a_k^\dagger a_m a_l \\
+       \hat F^{(2)}&= \frac{1}{2}\sum_{i,k,l,m} \bra{ik}\hat f^{(2)} \ket{lm} a_i^\dagger a_k^\dagger a_m a_l \\
         \bra{ik}\hat f^{(2)} \ket{lm} &= \int dr_1 \int dr_2 \psi^\ast(r_1)\psi^\ast(r_2) \hat f^{(2)}(\hat r_1, \hat p_1; \hat r_2, \hat p_2) \psi_l(r_1)\psi_m(r_2)
     \end{align*}
 \end{tcolorbox}
@@ -468,7 +477,159 @@ $$
 $$
 In real space: $\Psi = \psi_0(r_1)\psi_0(r_2)\dots \psi_0(r_N)$
 \subsection{Fermions}
+\textbf{Order one-particle states once and for all.} \\
+Consider a ``single-body" operator, $\hat F^{(1)} = \sum_a \hat f_a^{(1)} = \sum_a f(\hat r_a, \hat p_a)$. The only non-zero elements of $\hat F$ in the basis of Fock states involve $\{n_i'\} = \{n_i\}$ (no change in occupations) or shift \hl{one} particle from a state \circled{i} to a state \circled{k}: $n_i' = n_i \pm 1, n'_k = n_k \mp 1$ (all $n'{}^s$ are 0 or 1)\\
+\noindent Direct calculation shows:
+\[
+\begin{cases}
+    \bra{\dots 1_i,\dots,0_k\dots}\onebody{\hat F}\ket{\dots,0_i,\dots,1_k,\dots} = \bra{i}\onebody{f}\ket{k} \times (-1)^{\Sigma(i+1, k-1)} & i<k \\
+    \bra{\dots, 0_k,\dots ,1_i, \dots}\onebody{\hat F} \ket{\dots, 1_k, \dots, 0_i,\dots} = \bra{i} \onebody{f}\ket{k} \times (-1)^{\Sigma(k+1, i-1)} & i > k
+\end{cases}
+\]
+Here $\ket{\dots, 0_i, \dots, 1_k \dots} = \ket{n_1, n_2, \dots, n_i = 0, \dots, n_k=1,\dots}$ (One may use properties of det to check the relations, and figure out $\Sigma(m,a)$)\\
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \[
+        \Sigma(m, q) = 
+        \begin{cases}
+            \sum_{\lambda = m}^q n_\lambda & q \geq m\\
+            0 & q < m
+        \end{cases}
+    \]
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{./figures/determinant2.png}
+    \caption{Example Image}
+    \label{fig:example}
+  \end{minipage}
+\end{figure}
+Diagonal elements:
+$$
+\underbrace{\langle n_1}_{\text{position of state (ordered once and for all)}}^{\text{occup. number (0 or 1)}}, \dots | \onebody F | \ket{n_1, \dots} = \sum_{i=0}^{\infty} \bra{i}\onebody f \ket{i} n_i
+$$
+Introduce operators $a^\dagger, a$ as matrices between the basis Fock states with the non-zero matrix elements:
+$$
+\bra{0_i}\hat a_i \ket{1_i} = \bra{1_i}\hat a_i^\dagger \ket{0_i} = (-1)^{\Sigma(1, i-1)))))))))}
+$$
+Use this relation to evaluate
+\[
+\begin{cases}
+    \langle \overbrace{1_i, 0_k}^{\textcolor{yellow}{i < k}}|\hat a_i^\dagger \hat a_k^\dagger\rangle = (-1)^{\Sigma(i+1, k-1)} & i< k\\
+    \bra{1_i 0_k}\hat a_k \hat a_i^\dagger \ket{0_i, 1_k} = -(-1)^{\Sigma(i+1, k-1)} & i < k
+\end{cases}
+\]
+Similarly, at $k < i$ one gets these relations with $\Sigma(i+1, k-1) \to \Sigma(k+1, i-1)$
+$$
+a_i^\dagger a_k + a_k a_i^\dagger = 0, \smallspace i\neq k
+$$
+$$
+\bra{n_i} \hat a_i^\dagger \hat a_i \ket{n_i} = n_i \smallspace \bra{n_1}a_ia^\dagger_i \ket{n_i} = 1-n_i \ \text{(check directly from def. of $a, a^\dagger$)} \smallspace \hat a_i \hat a_i^\dagger + \hat a_i^\dagger \hat a_i = 1
+$$
+Therefore
+$$
+a^\dagger _i a_k + a_k a_i^\dagger = \delta_{ik}, \ \text{or} \ \{ a_i^\dagger, a_k\} = \delta_{ik}
+$$
+(Here $\{ \hat A, \hat B\} \equiv \hat A \hat B + \hat B \hat A,$ anticommutator)
+Similarly one gets:
+$$
+a_i a_k + a_k a_i = 0, \ \text{or} \ \{a_i, a_k\} = 0 \ (\forall i, k)
+$$
+Using the creation and annihilation operators, we may write $\onebody{\hat F}$ in the second-quantization representation:
+$$
+\onebody{\hat F} = \sum_{i,k} \bra{i} \onebody f \ket{k}a_i^\dagger a_k
+$$
+\textcolor{purple}{\hl{Now we derive for 2-body operators:}}
+$$
+\twobody {\hat F} = \sum_{a > b} \twobody f_{ab} \Rightarrow \twobody {\hat F} = \frac{1}{2} \sum_{iklm}\bra{ik} \twobody f \ket{lm}a_i^\dagger a_k^\dagger a_m a_l
+$$
+$$
+\smallspace \smallspace \smallspace \smallspace \textcolor{purple}{\text{\hl{normal order of operators $a^\dagger, a$}}}
+$$
+\textcolor{purple}{with}
+$$
+\bra{ik} \twobody f \ket{lm} = \int dr_1 \int dr_2 \psi_i^\ast(r_1) \psi_k^\ast(r_2)\twobody{\hat f}(\hat r_1, \hat p_1; \hat r_2, \hat p_2)\psi_l(r_2)\psi_m(r_2)
+$$
+The ``two-body" operator in second quantization:
+\begin{align*}
+    \twobody{\hat F} &= \sum_{a > b}\twobody{\hat f}_{ab} = \frac{1}{2}\sum_{a,b} \twobody f(r_a, r_b) - \frac{1}{2}\sum_a f(\hat r_a, \hat r_a)\\
+                     &= \frac{1}{2} \sum_{a,b} \int dR_1 \int dR_2 \delta(R_1-r_1) f(R_1, R-2)\delta(R_2-r_b) - \frac{1}{2} \sum_{a}\int dR \delta(R-r_a)f(R,R)\\
+                     &= \frac{1}{2}\int dR_1 \int dR_2 f(R_1,R_2)\sum_a \delta(R_1-r_a)\sum_b\delta(R_2 - r_b)- \frac{1}{2}\int dR f(R, R)\sum_a\delta(R-r_a) \\
+                     &= \colorbox{yellow}{$\frac{1}{2} \int dR_1\int dR_2 f(R_1,R_2) \hat n(R_1) \hat n(R_2) - \frac{1}{2} \int dR f(R, R) \hat n(R)$}
+\end{align*}
+\textcolor{purple}{Use the ``one-body" operators $\hat n(R)$ in second-quantized form:}
+\begin{align*}
+    \hat n(R_1) &= \sum_{m,n}\psi^\ast_m(R_1)\psi_n(R_1)a_m^\dagger a_n & &\textcolor{purple}{\text{(recall $\bra{m} \hat n(R) \ket{n} = \psi_m^\ast(r) \psi_n(R)$)}} &\\
+    \hat n(R_2) &= \sum_{k,l}\psi_k^\ast(R_2)\psi_l(R_2)a^\dagger _k a_l & \\
+    \hat n(R_1) \hat n(R_2) &\longrightarrow a_m^\dagger a_n a_k^\dagger a_l
+\end{align*}
+\begin{itemize}
+    \item[\circled{1}] Check that \hl{$a_m^\dagger a_n a_k^\dagger a_l = a_m^\dagger a_k^\dagger a_l a_n + \delta_{nk}a_m^\dagger a_l$}
+    \item[\circled{2}] use $\sum_{nk}\delta_{nk} \psi_k^\ast(R_2)\psi_n(R_1) = \delta(R_1 - R_2)$\\
+    \item[\circled{3}] see the cancellation of $\int dR f(R, R)\hat n(R)$ upon normal ordering.
+\end{itemize}
+$$
+\hat{\mathcal H} = \sum_a \hat{\mathcal H}_a^{(1)} + \sum_{a > b} V(\vec r_a, \vec r_b), \smallspace \text{with } \hat H_a^{(1)}= -\frac{\hbar^2}{2m}\nabla^2 + U(\vec r_a)
+$$
+In second quantization:
+$$
+\hat{\mathcal H} = \sum_{ik} \bra{i}\mathcal{H}^{(1)}\ket{k} a_i^\dagger a_k + \overbrace{\frac{1}{2} \sum_{i,k,l,m}\bra{ik}\hat V \ket{lm} a_i^\dagger a_k^\dagger a_m a_l}^{\textcolor{purple}{\text{order matters!}}}
+$$
+$$
+\bra{ik}\mathcal H^{(1)} \ket{k} = \int dr_1 \psi_i^\ast(r_1)\qty(-\frac{\hbar^2}{2m}\nabla^2 + U(\vec r_a))\psi_i(\vec r_1)
+$$
+$$
+\bra{ik}\hat V \ket{lm} = \int dr_1 \int dr_2 \psi_i^\ast(r_1)\psi_k^\ast(r_2) V(r_1, r_2) \psi_l(r_1)\psi_m(r_2)
+$$
+$$
+\hat N = \sum_i a_i^\dagger a_k, \smallspace [\hat N, \hat{\mathcal H}] = 0
+$$
+Ground-state wave function for non-interacting fermions:
+$$
+\ket{\text{GS}} = \underbrace{\ket{1,1,1,\dots,1,0,0,0}}_{N \text{ total \# ofparticles)}} = \prod_{E_i \leq E_{\text{F}} }a_i^\dagger \ket{0}
+$$
 \subsection{Field Operators}
+We may justify the term "second quantization."\\
+\noindent Introduce:
+\begin{align*}
+    &\colorbox{yellow}{$\hat \psi(\vec r) = \sum_{i}\psi_i(\vec r) \hat a_i$} & &\colorbox{yellow}{$\hat \psi^\dagger(\vec r) = \sum_i \psi_i^\ast(\vec r)\hat a_i^\dagger$}
+\end{align*}
+($\psi_i(\vec r)$ form full orthonormal basis)\\
+\hl{Commutation relations for $\hat \psi, \hat \psi^\dagger$:}
+\begin{align*}
+    \hat \psi(\vec r_1) \hat \psi^\dagger (\vec r_2) {\pm}^{\text{fermions}}_{\text{bosons}}  \hat \psi^\dagger(\vec r_2)\hat\psi(\vec r_1) &= \sum_{i}\psi_i(\vec r_1)\hat a_i \sum_{j}\psi^\ast_{j}(\vec r_2)\hat a_j^\dagger \pm \sum_j \psi_j^\ast(\vec r_2)\hat a_j^\dagger \sum_{i}\hat \psi_i(\vec r_1) \hat a_i\\
+              &= \sum_{ij}\psi_i(\vec r_1)\psi_j^\ast(\vec r_2)(\hat a_i \hat a_j^\dagger \pm a_j^\dagger a_i)\\
+              &= \sum_{ij}\delta_{ij}\psi_i(\vec r_1)\psi_j^\ast(\vec r_2)\\
+              &= \sum_i \psi_i(\vec r_1) \psi_i^\ast(\vec r_2) \\
+              &= \delta(\vec r_1- \vec r_2)
+\end{align*}
+\[
+\begin{cases}
+    \hat \psi(\vec r_1) \hat \psi^\dagger(\vec r_2) \stackrel{f}{\pm}{b} \hat \psi^\dagger(\vec r_2)\psi(\vec r_2) = \delta(\vec r_1 - \vec r_2)\\
+    \hat \psi(\vec r_1)\hat \psi(r_2) \stackrel{f}{\pm}{b} \hat \psi(\vec r_2) \hat \psi(\vec r_1) = 0
+\end{cases}
+\]
+\begin{tcolorbox}[colframe = red, colback = white]
+$$
+\mathcal H = \int d\vec r \left \{-\frac{\hbar^2}{2m}\hat \psi^\dagger(\vec r)\nabla^2\hat\psi(\vec r) + \hat \psi^\dagger(\vec r)\mathcal U(\vec r)\psi(\vec r)\right \}
++ \frac{1}{2}\int d\vec r_1 \int d\vec r_2 \hat \psi^\dagger(\vec r_1)\hat \psi^\dagger(\vec r_2)V(\vec r_1, \vec r_2) \hat \psi(\vec r_2)\psi(\vec r_2)
+$$
+$$
+\hat n(\vec r) = \hat\psi^\dagger(\vec r)\hat \psi(\vec r); \smallspace \hat N = \int d\vec r \hat n(\vec r) = \int d\vec r \hat \psi^\dagger(\vec r) \hat \psi(\vec r)
+$$
+\end{tcolorbox}
+\textit{Particles with spin:}
+$$
+\hat \psi(\vec r) \longrightarrow \hat \psi(\vec r, \sigma) \equiv \hat \psi_\sigma(\vec r)
+$$
+$$
+V = \frac{1}{2}\sum_{\sigma_1 \sigma_2} \int  d\vec r_1 \int d\vec r_2 \hat \psi_{\sigma_1}^\dagger \hat \psi_{\sigma_2}(\vec r_2)V(\vec r_1, \vec r_2)\hat \psi_{\sigma_2}(\vec r_2)\hat \psi_{\sigma_1}(\vec r_1)
+$$
+$$
+\smallspace \stackrel{\textcolor{purple}{\uparrow}}{\textcolor{purple}{\text{spin-conserving interaction}}}
+$$
 \subsection{Change of the one-particle basis in second quantization}
 \subsection{Momentum representation of field operators}
 \subsection{Time evolution of observables, equations of motion}
